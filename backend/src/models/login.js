@@ -1,10 +1,10 @@
-const cnn = require('../../db/connection');   // ✅ pool directo
+const cnn = require('../../db/connection');   // pool directo
 const tools = require('../shared/tools.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const constantes = require('../shared/constants');
-const { rolesUsuario } = require('../shared/functions');   // ✅ import correcto
+const { rolesUsuario } = require('../shared/functions');   // import correcto
 const constants = require('../shared/constants');
 
 let login = {};
