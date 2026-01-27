@@ -8,12 +8,12 @@ const bodyParser = require('body-parser');  // JSON requests
 const app = express();
 
 // Carpeta pública
-const publicDir = path.join(__dirname,'/public');
+const publicDir = path.join(__dirname, '/public');
 
 // Middlewares globales
 app.use(cors());
-app.use(express.static(publicDir)); 
-app.use(morgan('dev')); 
+app.use(express.static(publicDir));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 // Puerto dinámico (Render / Cloud)
@@ -55,6 +55,6 @@ require('./routes/ciudadesRoutes')(app, null);
 require('./routes/tallasRoutes')(app, null);
 
 // ===== SERVIDOR =====
-app.listen(PORT, () => {    
-    console.log('Servidor activo en el puerto ' + PORT);
+app.listen(PORT, () => {
+  console.log('Servidor activo en el puerto ' + PORT);
 });
