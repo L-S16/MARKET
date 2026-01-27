@@ -1,22 +1,24 @@
-const cors = require('cors');   //Evitar el error de CORS: https://www.techiediaries.com/fix-cors-with-angular-cli-proxy-configuration/
+const cors = require('cors');   
 const express = require('express');
-var publicDir = require('path').join(__dirname,'/public');  //Configurando la carpeta public que contiene las imágenes
+const path = require('path');
+
+const publicDir = path.join(__dirname, '/public');  
 
 const app = express();
 app.use(express.static(publicDir)); 
 app.use(cors());
 
-const morgan = require('morgan');   //
-const bodyParser = require('body-parser');  //Nevesario para atender las peticiones post
+const morgan = require('morgan');   
+const bodyParser = require('body-parser');  
 
 
 app.set('port', process.env.PORT || 3001);
 
-//middewares
-app.use(morgan('dev')); //Utiliza morgan en modo de develop para mostrar los mensajes por consola
-app.use(bodyParser.json()); //Permite recibir y entender los datos recibidos como objeto JSON
+// middlewares
+app.use(morgan('dev')); 
+app.use(bodyParser.json()); 
 
-//Definiendo rutas
+// rutas
 require('./routes/loginRoutes')(app, null);
 require('./routes/userRoutes')(app, null);
 require('./routes/menusRoutes')(app, null);
@@ -45,6 +47,7 @@ require('./routes/preciosRoutes')(app, null);
 require('./routes/sendEmailRoutes')(app, null);
 
 
-app.listen(app.get('port'), '192.168.43.118',() => {
-    console.log('Servidor activo en el puerto ' + app.get('port'))
-})
+// 🔥 CLOUD READY (Render compatible)
+app.listen(app.get('port'), () => {
+    console.log('Servidor activo en el puerto ' + app.get('port'));
+});
