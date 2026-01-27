@@ -7,11 +7,11 @@ let connection = {}
 connection.pool = () => {
     return mysql.createPool({
         connectionLimit : 10,
-        host: '127.0.0.1',
+        host: 'centerbeam.proxy.rlwy.net',
         port: '3306',
         user: 'root',
-        password: 'mabc',
-        database: 'market',
+        password: 'WlKBYbxIIRNcwKCjJhIrEjxWjcnuKuhy',
+        database: 'railway',
         debug: false,
     });
 }
