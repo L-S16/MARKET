@@ -3,8 +3,9 @@ const tools = require('../shared/tools.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const constantes = require('../../config/constants');
-const constants = require('../../config/constants');
+// RUTAS CORRECTAS SEGÚN TU ESTRUCTURA REAL
+const constantes = require('../shared/constants');
+const constants = require('../shared/constants');
 const { rolesUsuario } = require('../shared/functions');   // import correcto
 
 let login = {};
