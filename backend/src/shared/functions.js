@@ -1,14 +1,20 @@
-const connection = require('../../db/connection')
+const connection = require('../../db/connection');
 
-let cnn = connection.conect()
+// ✅ Si connection exporta un pool o conexión directa:
+const cnn = connection;
 
-module.exports = function todayToString(){
+// ===============================
+// Utils
+// ===============================
+function todayToString(){
     let fecha = new Date();
-    return `${fecha.getFullYear()}/${(fecha.getMonth() < 10 ? '0' : '')+fecha.getMonth()}/${(fecha.getDate() < 10 ? '0' : '') + fecha.getDate()}`;
+    return `${fecha.getFullYear()}/${(fecha.getMonth() + 1 < 10 ? '0' : '') + (fecha.getMonth() + 1)}/${(fecha.getDate() < 10 ? '0' : '') + fecha.getDate()}`;
 }
 
-
-module.exports = function rolesUsuario(idUser){
+// ===============================
+// Roles por usuario
+// ===============================
+function rolesUsuario(idUser){
     if(cnn){
         let qry = `SELECT 
                     r.id, 
@@ -23,9 +29,10 @@ module.exports = function rolesUsuario(idUser){
                 WHERE 
                     ru.user_id = ${cnn.escape(idUser)}`;
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             cnn.query(qry, (err, res) => {
                 if(err){
+                    console.error('rolesUsuario error:', err);
                     return resolve([]);
                 }else{
                     return resolve(res);
@@ -33,7 +40,15 @@ module.exports = function rolesUsuario(idUser){
             });
         });
     }else{
-        console.log('rolesUsuario','Conexión inactiva')
+        console.log('rolesUsuario','Conexión inactiva');
         return [];
     }
 }
+
+// ===============================
+// Exports correctos
+// ===============================
+module.exports = {
+    todayToString,
+    rolesUsuario
+};

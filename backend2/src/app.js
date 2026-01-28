@@ -1,23 +1,30 @@
-const cors = require('cors');   //Evitar el error de CORS: https://www.techiediaries.com/fix-cors-with-angular-cli-proxy-configuration/
+const cors = require('cors');   // Evitar error de CORS
 const express = require('express');
-var publicDir = require('path').join(__dirname,'/public');  //Configurando la carpeta public que contiene las imágenes
+const path = require('path');
+const morgan = require('morgan');   // Logs
+const bodyParser = require('body-parser');  // JSON requests
 
+// Configuración de app
 const app = express();
+
+// Carpeta pública
+const publicDir = path.join(__dirname, '/public');
+
+// Middlewares globales
 app.use(cors());
-app.use(express.static(publicDir)); 
+app.use(express.static(publicDir));
+app.use(morgan('dev'));
+app.use(bodyParser.json());
 
-const morgan = require('morgan');   //
-const bodyParser = require('body-parser');  //Necesario para atender las peticiones post
-const { resolve } = require('path');
+// Puerto dinámico (Render / Cloud)
+const PORT = process.env.PORT || 3001;
 
+// ===== RUTA RAÍZ (TEST API) =====
+app.get('/', (req, res) => {
+  res.send('API MARKET ONLINE 🚀');
+});
 
-app.set('port', process.env.PORT || 3001);
-
-//middewares
-app.use(morgan('dev')); //Utiliza morgan en modo de develop para mostrar los mensajes por consola
-app.use(bodyParser.json()); //Permite recibir y entender los datos recibidos como objeto JSON
-
-//Definiendo rutas
+// ===== RUTAS =====
 require('./routes/loginRoutes')(app, null);
 require('./routes/userRoutes')(app, null);
 require('./routes/menusRoutes')(app, null);
@@ -47,9 +54,7 @@ require('./routes/sendEmailRoutes')(app, null);
 require('./routes/ciudadesRoutes')(app, null);
 require('./routes/tallasRoutes')(app, null);
 
-//app.listen(app.get('port'))
-
-//app.listen(app.get('port'), '0.0.0.0',() => { //heroku
-app.listen(app.get('port'), '192.168.1.125',() => {    
-    console.log('Servidor activo en el puerto ' + app.get('port'))
-})
+// ===== SERVIDOR =====
+app.listen(PORT, () => {
+  console.log('Servidor activo en el puerto ' + PORT);
+});
