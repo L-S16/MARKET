@@ -1,25 +1,14 @@
-const cnn = require('../../db/connection');   // pool MySQL2
+const cnn = require('../../db/connection.js');   // pool MySQL2
 const tools = require('../shared/tools.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-<<<<<<< HEAD
+// RUTAS CORRECTAS
 const constantes = require('../shared/constants.js');
-const rolesUsuario = require('../shared/functions.js');
 const constants = require('../shared/constants.js');
-
-const cnn = require('../../db/connection.js');
-
-let login = {}
-
-=======
-// RUTAS CORRECTAS SEGÚN TU ESTRUCTURA REAL
-const constantes = require('../shared/constants');
-const constants = require('../shared/constants');
-const { rolesUsuario } = require('../shared/functions');   // import correcto
+const { rolesUsuario } = require('../shared/functions.js');
 
 let login = {};
->>>>>>> 3f69db924e833c34a8e25902aac354926e5c6670
 
 // ===============================
 // LOGIN
