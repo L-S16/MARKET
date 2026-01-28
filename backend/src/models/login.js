@@ -3,11 +3,11 @@ const tools = require('../shared/tools.js')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 
-const constantes = require('../shared/constants');
-const rolesUsuario = require('../shared/functions');
-const constants = require('../shared/constants');
+const constantes = require('../shared/constants.js');
+const rolesUsuario = require('../shared/functions.js');
+const constants = require('../shared/constants.js');
 
-let cnn = connection.conect();
+const cnn = require('../../db/connection.js');
 
 let login = {}
 

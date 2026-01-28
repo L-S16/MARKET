@@ -1,8 +1,8 @@
-const connection = require('../../db/connection.js');
-const constantes = require('../shared/constants');
-//const todayToString = require('../shared/functions');
 
-let cnn = connection.conect();
+const constantes = require('../shared/constants.js');
+//const todayToString = require('../shared/functions.js');
+
+const cnn = require('../../db/connection.js');
 let rowsPerPage = constantes.regPerPage;
 
 let rolesModel = {};

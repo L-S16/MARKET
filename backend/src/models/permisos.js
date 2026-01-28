@@ -1,6 +1,6 @@
 const connection = require('../../db/connection');
 
-let cnn = connection.conect();
+const cnn = require('../../db/connection.js');
 
 let permisosModel = {};
 

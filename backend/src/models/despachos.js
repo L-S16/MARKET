@@ -1,7 +1,7 @@
 const connection = require('../../db/connection')
-const constantes = require('../shared/constants')
+const constantes = require('../shared/constants.js')
 
-let cnn = connection.conect();
+const cnn = require('../../db/connection.js');
 
 let DespachosModel = {}
 

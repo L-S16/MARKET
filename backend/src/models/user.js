@@ -1,9 +1,9 @@
 const connection = require('../../db/connection.js')
 const tools = require('../shared/tools.js')
-const { regPerPage } = require('../shared/constants');
-const rolesUsuario = require('../shared/functions')
+const { regPerPage } = require('../shared/constants.js');
+const rolesUsuario = require('../shared/functions.js')
 
-let cnn = connection.conect();
+const cnn = require('../../db/connection.js');
 
 let userModel = {}
 

@@ -1,5 +1,5 @@
-const connection = require('../../db/connection.js');
-const constantes = require('../shared/constants');
+
+const constantes = require('../shared/constants.js');
 
 let cnn = connection.conect()
 

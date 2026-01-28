@@ -1,5 +1,5 @@
 const connection = require('../../db/connection')
-const regPerPage = require('../shared/constants');
+const regPerPage = require('../shared/constants.js');
 
 let cnn = connection.conect()
 

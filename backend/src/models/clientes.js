@@ -1,5 +1,5 @@
 const connection = require('../../db/connection')
-const constantes = require('../shared/constants')
+const constantes = require('../shared/constants.js')
 const tools = require('../shared/tools')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');

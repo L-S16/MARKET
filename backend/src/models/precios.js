@@ -1,5 +1,5 @@
 const connection = require('../../db/connection')
-const constants = require('../shared/constants')
+const constants = require('../shared/constants.js')
 
 const PreciosModel = {}
 
