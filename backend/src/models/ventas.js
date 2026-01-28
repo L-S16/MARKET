@@ -1,3 +1,4 @@
+const cnn = require('../../db/connection.js');
 const connection = require('../../db/connection')
 
 let cnn = connection.conect()

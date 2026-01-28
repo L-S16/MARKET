@@ -1,4 +1,4 @@
-const connection = require('../../db/connection');
+
 const constantes = require('../shared/constants.js');
 
 const cnn = require('../../db/connection.js');

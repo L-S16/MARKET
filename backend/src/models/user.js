@@ -1,16 +1,5 @@
-<<<<<<< HEAD
-const connection = require('../../db/connection.js')
-const tools = require('../shared/tools.js')
-const { regPerPage } = require('../shared/constants.js');
-const rolesUsuario = require('../shared/functions.js')
-
 const cnn = require('../../db/connection.js');
-=======
-const cnn = require('../../db/connection');   // pool MySQL2
-const bcrypt = require('bcrypt');
 
-let user = {};
->>>>>>> 3f69db924e833c34a8e25902aac354926e5c6670
 
 // ===============================
 // GET ALL USERS

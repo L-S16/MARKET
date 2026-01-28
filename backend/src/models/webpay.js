@@ -1,3 +1,4 @@
+const cnn = require('../../db/connection.js');
 //yarn add transbank-sdk 
 //Instalación https://www.npmjs.com/package/transbank-sdk
 //Integración https://www.transbankdevelopers.cl/referencia/webpay?l=javascript#crear-una-transaccion
