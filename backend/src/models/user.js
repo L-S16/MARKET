@@ -1,134 +1,178 @@
+// ===============================
+// IMPORTS
+// ===============================
+const connection = require('../../db/connection.js');
+const tools = require('../shared/tools.js');
+const { regPerPage } = require('../shared/constants.js');
+const rolesUsuario = require('../shared/functions.js');
 const cnn = require('../../db/connection.js');
+const bcrypt = require('bcrypt');
 
+let user = {};
 
 // ===============================
-// GET ALL USERS
+// GET ALL USERS (PAGINADO)
 // ===============================
-user.getAll = async (callback) => {
-    let qry = `
-        SELECT 
-            id,
-            name,
-            email,
-            created_at,
-            updated_at,
-            a_paterno,
-            a_materno,
-            direccion,
-            foto,
-            fono
-        FROM users
-        WHERE deleted_at IS NULL
-    `;
+user.getAll = async (page = 1) => {
+    try {
+        const offset = (page - 1) * regPerPage;
 
-    cnn.query(qry, (err, result) => {
-        if (err) return callback(err, null);
-        return callback(null, result);
-    });
+        const sql = `
+            SELECT id, nombre, email, rol, estado, created_at
+            FROM usuarios
+            LIMIT ? OFFSET ?
+        `;
+
+        const [rows] = await cnn.execute(sql, [regPerPage, offset]);
+        return rows;
+    } catch (error) {
+        console.error('Error getAll users:', error);
+        throw error;
+    }
 };
 
 // ===============================
 // GET USER BY ID
 // ===============================
-user.getById = async (id, callback) => {
-    let qry = `
-        SELECT 
-            id,
-            name,
-            email,
-            created_at,
-            updated_at,
-            a_paterno,
-            a_materno,
-            direccion,
-            foto,
-            fono
-        FROM users
-        WHERE id = ${cnn.escape(id)}
-        AND deleted_at IS NULL
-    `;
+user.getById = async (id) => {
+    try {
+        const sql = `SELECT * FROM usuarios WHERE id = ?`;
+        const [rows] = await cnn.execute(sql, [id]);
+        return rows[0];
+    } catch (error) {
+        console.error('Error getById user:', error);
+        throw error;
+    }
+};
 
-    cnn.query(qry, (err, result) => {
-        if (err) return callback(err, null);
-        return callback(null, result[0]);
-    });
+// ===============================
+// GET USER BY EMAIL
+// ===============================
+user.getByEmail = async (email) => {
+    try {
+        const sql = `SELECT * FROM usuarios WHERE email = ?`;
+        const [rows] = await cnn.execute(sql, [email]);
+        return rows[0];
+    } catch (error) {
+        console.error('Error getByEmail user:', error);
+        throw error;
+    }
 };
 
 // ===============================
 // CREATE USER
 // ===============================
-user.create = async (data, callback) => {
+user.create = async (data) => {
     try {
-        const hash = await bcrypt.hash(data.password, 10);
+        const passwordHash = await bcrypt.hash(data.password, 10);
 
-        let qry = `
-            INSERT INTO users (
-                name,
-                email,
-                password,
-                a_paterno,
-                a_materno,
-                direccion,
-                fono,
-                created_at
-            ) VALUES (
-                ${cnn.escape(data.name)},
-                ${cnn.escape(data.email)},
-                ${cnn.escape(hash)},
-                ${cnn.escape(data.a_paterno)},
-                ${cnn.escape(data.a_materno)},
-                ${cnn.escape(data.direccion)},
-                ${cnn.escape(data.fono)},
-                NOW()
-            )
+        const sql = `
+            INSERT INTO usuarios (nombre, email, password, rol, estado)
+            VALUES (?, ?, ?, ?, ?)
         `;
 
-        cnn.query(qry, (err, result) => {
-            if (err) return callback(err, null);
-            return callback(null, { id: result.insertId });
-        });
+        const values = [
+            data.nombre,
+            data.email,
+            passwordHash,
+            data.rol || 'USER',
+            data.estado || 1
+        ];
 
+        const [result] = await cnn.execute(sql, values);
+        return { id: result.insertId, ...data };
     } catch (error) {
-        return callback(error, null);
+        console.error('Error create user:', error);
+        throw error;
     }
 };
 
 // ===============================
 // UPDATE USER
 // ===============================
-user.update = async (id, data, callback) => {
-    let qry = `
-        UPDATE users SET
-            name = ${cnn.escape(data.name)},
-            email = ${cnn.escape(data.email)},
-            a_paterno = ${cnn.escape(data.a_paterno)},
-            a_materno = ${cnn.escape(data.a_materno)},
-            direccion = ${cnn.escape(data.direccion)},
-            fono = ${cnn.escape(data.fono)},
-            updated_at = NOW()
-        WHERE id = ${cnn.escape(id)}
-    `;
+user.update = async (id, data) => {
+    try {
+        let sql = `UPDATE usuarios SET `;
+        let fields = [];
+        let values = [];
 
-    cnn.query(qry, (err, result) => {
-        if (err) return callback(err, null);
-        return callback(null, { updated: true });
-    });
+        if (data.nombre) {
+            fields.push('nombre = ?');
+            values.push(data.nombre);
+        }
+
+        if (data.email) {
+            fields.push('email = ?');
+            values.push(data.email);
+        }
+
+        if (data.rol) {
+            fields.push('rol = ?');
+            values.push(data.rol);
+        }
+
+        if (data.estado !== undefined) {
+            fields.push('estado = ?');
+            values.push(data.estado);
+        }
+
+        if (data.password) {
+            const passwordHash = await bcrypt.hash(data.password, 10);
+            fields.push('password = ?');
+            values.push(passwordHash);
+        }
+
+        sql += fields.join(', ') + ` WHERE id = ?`;
+        values.push(id);
+
+        const [result] = await cnn.execute(sql, values);
+        return result;
+    } catch (error) {
+        console.error('Error update user:', error);
+        throw error;
+    }
 };
 
 // ===============================
-// DELETE USER (LOGICAL)
+// DELETE USER
 // ===============================
-user.delete = async (id, callback) => {
-    let qry = `
-        UPDATE users SET
-            deleted_at = NOW()
-        WHERE id = ${cnn.escape(id)}
-    `;
-
-    cnn.query(qry, (err, result) => {
-        if (err) return callback(err, null);
-        return callback(null, { deleted: true });
-    });
+user.delete = async (id) => {
+    try {
+        const sql = `DELETE FROM usuarios WHERE id = ?`;
+        const [result] = await cnn.execute(sql, [id]);
+        return result;
+    } catch (error) {
+        console.error('Error delete user:', error);
+        throw error;
+    }
 };
 
+// ===============================
+// LOGIN USER
+// ===============================
+user.login = async (email, password) => {
+    try {
+        const sql = `SELECT * FROM usuarios WHERE email = ?`;
+        const [rows] = await cnn.execute(sql, [email]);
+
+        if (rows.length === 0) return null;
+
+        const usuario = rows[0];
+        const match = await bcrypt.compare(password, usuario.password);
+
+        if (!match) return null;
+
+        // Eliminar password del objeto
+        delete usuario.password;
+
+        return usuario;
+    } catch (error) {
+        console.error('Error login user:', error);
+        throw error;
+    }
+};
+
+// ===============================
+// EXPORT
+// ===============================
 module.exports = user;
